@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Playwrite_AU_QLD } from "next/font/google";
 import "./globals.css";
 import ClientSessionWrapper from "@/components/sessionProvider";
 import { TanstackProvider } from "@/components/tanstackProvider";
@@ -12,6 +12,10 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const playwrite = Playwrite_AU_QLD({
+  variable: "--font-playwrite",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playwrite.variable} antialiased`}
       >
         <ClientSessionWrapper>
           <TanstackProvider>{children}</TanstackProvider>
