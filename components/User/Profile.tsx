@@ -497,14 +497,14 @@ export default function ProfilePage() {
             <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => setEditField(null)}
-                className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400"
+                className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={updateProfileMutation.isPending}
-                className="px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 disabled:bg-orange-300"
+                className="px-4 py-2 rounded-lg bg-orange-500 cursor-pointer text-white hover:bg-orange-600 disabled:bg-orange-300"
               >
                 {updateProfileMutation.isPending ? "Saving..." : "Save"}
               </button>
