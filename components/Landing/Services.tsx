@@ -91,21 +91,6 @@ const Services = () => {
 
   return (
     <>
-      <section className="py-28 flex justify-center items-center flex-col">
-        <h1 className="text-5xl font-bold mb-20">
-          Organize it all in one place.
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-7 w-full max-w-7xl">
-          {services.map((service, index) => (
-            <div key={index} className="bg-gray-100 p-10 rounded-2xl">
-              <div className="icon">{service.icon}</div>
-              <h2 className="font-bold text-2xl mt-4 mb-2">{service.title}</h2>
-              <p className="text-lg">{service.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section>
         <div className="max-w-7xl mx-auto p-6 bg-white">
           {/* Header */}
@@ -151,6 +136,21 @@ const Services = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-28 flex justify-center items-center flex-col">
+        <h1 className="text-5xl font-bold mb-20">
+          Organize it all in one place.
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-7 w-full max-w-7xl">
+          {services.map((service, index) => (
+            <div key={index} className="bg-gray-100 p-10 rounded-2xl">
+              <div className="icon">{service.icon}</div>
+              <h2 className="font-bold text-2xl mt-4 mb-2">{service.title}</h2>
+              <p className="text-lg">{service.description}</p>
+            </div>
+          ))}
         </div>
       </section>
     </>
