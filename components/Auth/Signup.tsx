@@ -51,7 +51,7 @@ export default function SignUpPage() {
         toast.info(message);
       }
       if (userId) {
-        router.push(`/verify-otp?userId=${userId}`);
+        router.push("/verify-otp?userId=${userId}");
       }
     },
     onError: (err: any) => {
