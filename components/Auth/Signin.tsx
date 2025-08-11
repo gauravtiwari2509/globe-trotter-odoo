@@ -14,9 +14,9 @@ import { ArrowRight } from "lucide-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const roleRouteMap: Record<string, string> = {
-  moderator: "/moderator/dashboard",
-  user: "/user/dashboard",
-  admin: "/admin/dashboard",
+  MODERATOR: "/moderator/dashboard",
+  USER: "/user/dashboard",
+  ADMIN: "/admin/dashboard",
 };
 
 export default function SignInPage() {

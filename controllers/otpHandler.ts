@@ -9,11 +9,10 @@ export const handleOTPVerification = async (
   try {
     const { userId, otp } = data;
 
-    // Find user by email
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found." }, { status: 404 });
+      return NextResponse.json({ message: "User not found." }, { status: 404 });
     }
 
     if (user.verified) {
@@ -23,18 +22,27 @@ export const handleOTPVerification = async (
       );
     }
 
-    if (!user.otp || !user.otpExpiresAt || user.otp !== otp) {
+    if (!user.otp || !user.otpExpiresAt) {
       return NextResponse.json(
-        { error: "Invalid or expired OTP." },
-        { status: 400 }
+        { message: "OTP is missing or invalid." },
+        { status: 403 }
       );
     }
 
     if (user.otpExpiresAt < new Date()) {
-      return NextResponse.json({ error: "OTP has expired." }, { status: 410 });
+      return NextResponse.json(
+        { message: "OTP has expired." },
+        { status: 403 }
+      );
     }
 
-    // Mark user as verified and clear OTP
+    if (user.otp !== otp) {
+      return NextResponse.json(
+        { message: "Incorrect OTP. Please try again." },
+        { status: 403 }
+      );
+    }
+
     await prisma.user.update({
       where: { id: userId },
       data: {
@@ -45,13 +53,13 @@ export const handleOTPVerification = async (
     });
 
     return NextResponse.json(
-      { message: "Account successfully verified." },
+      { message: "OTP verified successfully." },
       { status: 200 }
     );
   } catch (error) {
     console.error("[VERIFY_OTP_ERROR]", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Internal Server Error" },
       { status: 500 }
     );
   }
