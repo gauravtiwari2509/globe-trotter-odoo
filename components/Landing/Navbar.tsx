@@ -55,13 +55,13 @@ const Navbar = () => {
           </div>
           {/* Desktop Navigation */}
           <div className="hidden lg:flex justify-center items-center">
-            <div className="ml-10 flex justify-center items-center space-x-8">
+            <div className="ml-10 flex justify-center items-center space-x-4">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "px-3 py-2 rounded-xl text-base transition-all duration-200"
+                    "px-5 py-2 rounded-full hover:bg-gray-700/10 text-base transition-all duration-200"
                   )}
                 >
                   {item.name}
@@ -71,7 +71,7 @@ const Navbar = () => {
               {/* Administration Dropdown */}
               <div className="relative group">
                 <button
-                  className="flex items-center px-3 py-2 rounded-md text-base hover:text-sky-600 transition-all duration-200"
+                  className="flex items-center px-5 py-2 rounded-full hover:bg-gray-700/10 text-base  transition-all duration-200 cursor-pointer"
                   onMouseEnter={() => setIsAdminDropdownOpen(true)}
                   onMouseLeave={() => setIsAdminDropdownOpen(false)}
                 >
