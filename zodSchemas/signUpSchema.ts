@@ -6,9 +6,10 @@ export const signUpSchema = z
       .string()
       .email("Invalid email format")
       .regex(
-        /^[a-zA-Z0-9._%+-]+@nist\.edu$/,
-        "Must be a valid @nist.edu email"
+        /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
+        "Must be a valid @gmail.com email"
       ),
+
     password: z
       .string()
       .min(6, "Password must be at least 6 characters")
