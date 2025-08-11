@@ -1,3 +1,9 @@
+import Landing from "@/components/Landing/Landing";
+
 export default function Home() {
-  return <div>keep patience something delicious will be cooked soon</div>;
+  return (
+    <div>
+      <Landing />
+    </div>
+  );
 }
