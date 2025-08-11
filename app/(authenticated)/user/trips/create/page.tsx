@@ -1,8 +1,8 @@
-import { CreateTripForm } from "@/components/Trip/CreateTrip";
+import { TripPlan } from "@/components/Trip/TripPlan";
 import React from "react";
 
 const page = () => {
-  return <CreateTripForm />;
+  return <TripPlan />;
 };
 
 export default page;
