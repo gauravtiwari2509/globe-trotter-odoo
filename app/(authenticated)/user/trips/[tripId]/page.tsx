@@ -1,7 +1,7 @@
 import React from "react";
 
 const page = () => {
-  return <div>sign up page</div>;
+  return <div>show single trip by id</div>;
 };
 
 export default page;
