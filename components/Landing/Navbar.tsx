@@ -49,7 +49,7 @@ const Navbar = () => {
     >
       <div className=" py-1">
         <div className="mx-auto px-3 lg:px-12 flex justify-between">
-          <div className="flex items-center justify-center py-3 md:py-4 font-extrabold">
+          <div className="flex items-center justify-center py-3 md:py-4 font-extrabold text-xl">
             <Sparkles className="mr-2" />
             GlobalTrotter
           </div>

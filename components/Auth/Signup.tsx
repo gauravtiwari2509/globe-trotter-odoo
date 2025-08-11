@@ -36,10 +36,8 @@ export default function SignUpPage() {
         ...data,
         role: "general_user",
       }),
-
     onSuccess: (res) => {
       const { userId, message } = res.data;
-
       if (message.includes("created")) {
         toast.success("Account created. OTP sent to your email.");
       } else if (message.includes("OTP already sent")) {
@@ -52,16 +50,13 @@ export default function SignUpPage() {
       } else {
         toast.info(message);
       }
-
       if (userId) {
         router.push(`/verify-otp?userId=${userId}`);
       }
     },
-
     onError: (err: any) => {
       const status = err?.response?.status;
       const errorMsg = err?.response?.data?.error || "Something went wrong.";
-
       if (status === 409) {
         toast.warning("Account already exists. Please sign in.");
       } else if (status === 500) {
@@ -77,16 +72,17 @@ export default function SignUpPage() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-950 to-gray-900 text-white px-4 py-8">
-      <div className="absolute top-1/6 max-md:left-1 left-1/5 w-72 h-72 bg-orange-600/12 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white/20 rounded-full blur-3xl"></div>
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-orange-50 to-white text-gray-900 px-4 py-8">
+      {/* Decorative blurred shapes */}
+      <div className="absolute top-1/6 max-md:left-1 left-1/5 w-72 h-72 bg-orange-200/40 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-orange-100/30 rounded-full blur-3xl"></div>
 
-      <div className="relative z-10 w-full max-w-4xl bg-white/10 backdrop-blur-xl p-6 sm:p-8 md:p-10 rounded-2xl shadow-2xl">
+      <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 rounded-2xl border border-orange-100">
         <div className="text-center mb-6 sm:mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold font-michroma text-orange-600">
             Create Your Account
           </h2>
-          <p className="text-xs mt-2 sm:text-sm text-white/80 font-tektur">
+          <p className="text-xs mt-2 sm:text-sm text-gray-600 font-tektur">
             Excited to have you join our family!
           </p>
         </div>
@@ -108,11 +104,11 @@ export default function SignUpPage() {
               type="text"
               id="displayName"
               {...register("displayName")}
-              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
               placeholder="John Doe"
             />
             {errors.displayName && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1">
                 {errors.displayName.message}
               </p>
             )}
@@ -127,11 +123,11 @@ export default function SignUpPage() {
               type="email"
               id="email"
               {...register("email")}
-              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
               placeholder="you@gmail.com"
             />
             {errors.email && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1">
                 {errors.email.message}
               </p>
             )}
@@ -146,11 +142,11 @@ export default function SignUpPage() {
               type="tel"
               id="phoneNo"
               {...register("phoneNo")}
-              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
               placeholder="1234567890"
             />
             {errors.phoneNo && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1">
                 {errors.phoneNo.message}
               </p>
             )}
@@ -168,12 +164,12 @@ export default function SignUpPage() {
               type={showPassword ? "text" : "password"}
               id="password"
               {...register("password")}
-              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
               placeholder="••••••••"
             />
             <div
               onClick={() => setShowPassword((prev) => !prev)}
-              className="flex items-center gap-1 mt-1 text-sm cursor-pointer text-white/70 select-none"
+              className="flex items-center gap-1 mt-1 text-sm cursor-pointer text-gray-500 hover:text-gray-700 select-none"
             >
               {!showPassword ? (
                 <>
@@ -186,7 +182,7 @@ export default function SignUpPage() {
               )}
             </div>
             {errors.password && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1">
                 {errors.password.message}
               </p>
             )}
@@ -204,11 +200,11 @@ export default function SignUpPage() {
               type="password"
               id="confirmPassword"
               {...register("confirmPassword")}
-              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
               placeholder="Re-enter your password"
             />
             {errors.confirmPassword && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1">
                 {errors.confirmPassword.message}
               </p>
             )}
@@ -219,7 +215,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full py-3 cursor-pointer bg-white text-gray-900 font-bold rounded-full hover:bg-gray-100 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-michroma"
+              className="w-full py-3 cursor-pointer bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-michroma"
             >
               {isPending ? (
                 "Signing Up..."
@@ -232,7 +228,7 @@ export default function SignUpPage() {
           </div>
         </form>
 
-        <p className="text-xs sm:text-sm text-white/80 text-center mt-6 font-tektur">
+        <p className="text-xs sm:text-sm text-gray-600 text-center mt-6 font-tektur">
           Already have an account?{" "}
           <Link href="/signin" className="text-orange-600 underline font-bold">
             Sign In
@@ -242,7 +238,7 @@ export default function SignUpPage() {
         <div className="mt-4 text-center">
           <Link
             href="/"
-            className="text-xs sm:text-sm text-white/70 border-b-1 hover:text-white font-tektur"
+            className="text-xs sm:text-sm text-gray-500 hover:text-gray-700 font-tektur"
           >
             ← Go back to home
           </Link>
