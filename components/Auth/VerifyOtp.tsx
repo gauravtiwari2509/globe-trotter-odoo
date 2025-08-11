@@ -97,17 +97,19 @@ export default function VerifyOtp() {
   });
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-950 to-gray-900 text-white">
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-orange-50 to-white text-gray-900 px-4 py-8">
       {(isVerifying || isResending) && <Loader />}
-      <div className="absolute top-1/5 left-1/3 w-72 h-72 bg-orange-600/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
 
-      <div className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-xl p-8 rounded-2xl shadow-2xl">
+      {/* Decorative blurred circles */}
+      <div className="absolute top-1/5 left-1/3 w-72 h-72 bg-orange-200/40 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-orange-100/30 rounded-full blur-3xl"></div>
+
+      <div className="relative z-10 w-full max-w-md bg-white border border-orange-100 shadow-2xl p-8 rounded-2xl">
         <div className="text-center mb-8">
           <h2 className="text-3xl max-sm:text-xl font-bold font-michroma text-orange-600">
             Verify Your OTP
           </h2>
-          <p className="text-sm text-white/80 font-tektur">
+          <p className="text-sm text-gray-600 font-tektur">
             Enter the OTP sent to your email
           </p>
         </div>
@@ -124,20 +126,20 @@ export default function VerifyOtp() {
               id="otp"
               maxLength={6}
               {...register("otp")}
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60"
+              className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
               placeholder="6-digit OTP"
             />
             {errors.otp && (
-              <p className="text-red-400 text-sm mt-1">{errors.otp.message}</p>
+              <p className="text-red-500 text-sm mt-1">{errors.otp.message}</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={isVerifying}
-            className="w-full py-3 cursor-pointer bg-white text-gray-900 font-bold rounded-full hover:bg-gray-200 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-michroma"
+            className="w-full py-3 cursor-pointer bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-michroma"
           >
-            {isVerifying || false ? (
+            {isVerifying ? (
               "Verifying..."
             ) : (
               <>
@@ -148,7 +150,7 @@ export default function VerifyOtp() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-white/80 text-center mt-6 font-tektur">
+          <p className="text-sm text-gray-600 font-tektur">
             Didn’t receive an OTP?{" "}
             <button
               type="button"
@@ -156,7 +158,7 @@ export default function VerifyOtp() {
               disabled={isResending}
               className="text-orange-600 underline font-bold disabled:opacity-60 cursor-pointer"
             >
-              {isResending || false ? "Resending..." : "Resend OTP"}
+              {isResending ? "Resending..." : "Resend OTP"}
             </button>
           </p>
         </div>
@@ -164,7 +166,7 @@ export default function VerifyOtp() {
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-sm text-white/70 border-b-1 hover:text-white font-tektur"
+            className="text-sm text-gray-500 hover:text-gray-700 font-tektur"
           >
             ← Go back to home
           </Link>
