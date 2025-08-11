@@ -1,7 +1,12 @@
-import React from "react";
+import { Suspense } from "react";
+import VerifyOtp from "@/components/Auth/VerifyOtp";
 
-const page = () => {
-  return <div>page</div>;
+const VerifyOtpPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyOtp />
+    </Suspense>
+  );
 };
 
-export default page;
+export default VerifyOtpPage;
