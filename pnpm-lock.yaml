@@ -29,6 +29,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      globe-trotter:
+        specifier: 'link:'
+        version: 'link:'
       lucide-react:
         specifier: ^0.539.0
         version: 0.539.0(react@19.1.0)

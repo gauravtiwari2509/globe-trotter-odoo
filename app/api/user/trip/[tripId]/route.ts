@@ -5,22 +5,23 @@ import { authOptions } from "@/lib/auth/authOptions";
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+    // const session = await getServerSession(authOptions);
+    // if (!session) {
+    //   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    // }
 
-    const userId = session.user.id;
+    // const userId = session.user.id;
 
-    // Extract trip ID from URL path
+    const userId = "ca7d21a9-1899-4c49-968f-c58b9303c53f"
+
     const url = new URL(req.url);
+    console.log("URL:",url);
     const tripId = url.pathname.split("/").pop();
 
     if (!tripId) {
       return NextResponse.json({ message: "Trip ID is required" }, { status: 400 });
     }
 
-    // Fetch the trip with relations, only if owned by this user
     const trip = await prisma.trip.findFirst({
       where: {
         id: tripId,
