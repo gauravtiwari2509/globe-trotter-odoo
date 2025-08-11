@@ -5,11 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
-
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-
   const { id } = session.user;
 
   try {
@@ -35,6 +33,8 @@ export async function GET(req: NextRequest) {
           },
         },
         trips: {
+          orderBy: { createdAt: "desc" },
+          take: 5, 
           select: {
             id: true,
             title: true,
@@ -56,9 +56,7 @@ export async function GET(req: NextRequest) {
                   select: {
                     id: true,
                     name: true,
-                    country: {
-                      select: { id: true, name: true, code: true },
-                    },
+                    country: { select: { id: true, name: true, code: true } },
                   },
                 },
               },
@@ -87,11 +85,7 @@ export async function GET(req: NextRequest) {
               },
             },
             favorites: {
-              select: {
-                id: true,
-                createdAt: true,
-                userId: true,
-              },
+              select: { id: true, createdAt: true, userId: true },
             },
             comments: {
               select: {
@@ -106,29 +100,32 @@ export async function GET(req: NextRequest) {
           },
         },
         favorites: {
+          orderBy: { createdAt: "desc" },
+          take: 5, // latest 5 favourites
           select: {
             id: true,
+            createdAt: true,
             trip: {
               select: { id: true, title: true, slug: true },
             },
           },
         },
-        comments: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            trip: { select: { id: true, title: true, slug: true } },
-          },
-        },
-        media: {
-          select: {
-            id: true,
-            url: true,
-            type: true,
-            createdAt: true,
-          },
-        },
+        // comments: {
+        //   select: {
+        //     id: true,
+        //     content: true,
+        //     createdAt: true,
+        //     trip: { select: { id: true, title: true, slug: true } },
+        //   },
+        // },
+        // media: {
+        //   select: {
+        //     id: true,
+        //     url: true,
+        //     type: true,
+        //     createdAt: true,
+        //   },
+        // },
       },
     });
 
