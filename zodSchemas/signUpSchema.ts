@@ -2,6 +2,15 @@ import { z } from "zod";
 
 export const signUpSchema = z
   .object({
+    displayName: z
+      .string()
+      .min(3, "Display name must be at least 3 characters")
+      .max(50, "Display name must be at most 50 characters"),
+
+    phoneNo: z
+      .string()
+      .regex(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+
     email: z
       .string()
       .email("Invalid email format")
@@ -17,6 +26,7 @@ export const signUpSchema = z
       .regex(/[A-Z]/, "At least one uppercase letter required")
       .regex(/[0-9]/, "At least one digit required")
       .regex(/[^a-zA-Z0-9]/, "At least one special character required"),
+
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
