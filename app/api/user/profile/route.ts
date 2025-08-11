@@ -37,18 +37,6 @@ export async function GET(req: NextRequest) {
             updatedAt: true,
           },
         },
-        trips: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            description: true,
-            status: true,
-            startDate: true,
-            endDate: true,
-            createdAt: true,
-          },
-        },
       },
     });
 
@@ -59,22 +47,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Separate trips by status
-    const preplannedTrips = userProfile.trips.filter(trip =>
-      ["DRAFT", "PUBLISHED"].includes(trip.status)
-    );
-
-    const previousTrips = userProfile.trips.filter(
-      trip => trip.status === "COMPLETED"
-    );
-
-    // Remove `trips` from main profile before returning
-    const { trips, ...profileData } = userProfile;
-
-    return NextResponse.json(
-      { userProfile: profileData, preplannedTrips, previousTrips },
-      { status: 200 }
-    );
+    return NextResponse.json({ userProfile }, { status: 200 });
   } catch (error) {
     console.error("Failed to fetch user profile:", error);
     return NextResponse.json(

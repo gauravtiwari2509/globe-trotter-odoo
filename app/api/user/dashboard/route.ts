@@ -11,129 +11,110 @@ export async function GET(req: NextRequest) {
   const { id } = session.user;
 
   try {
-    const userDashboard = await prisma.user.findUnique({
-      where: { id },
+    // Quantifiable stats
+    const [
+      totalTrips,
+      totalFavorites,
+      totalComments,
+      totalActivities,
+      totalExpenses,
+    ] = await Promise.all([
+      prisma.trip.count({ where: { ownerId: id } }),
+      prisma.favorite.count({ where: { userId: id } }),
+      prisma.comment.count({ where: { authorId: id } }),
+      prisma.tripActivity.count({ where: { trip: { ownerId: id } } }),
+      prisma.expense.count({ where: { trip: { ownerId: id } } }),
+    ]);
+
+    // Recent data (limit 5)
+    const recentTrips = await prisma.trip.findMany({
+      where: { ownerId: id },
+      orderBy: { createdAt: "desc" },
+      take: 5,
       select: {
         id: true,
-        email: true,
-        role: true,
-        verified: true,
+        title: true,
+        slug: true,
+        status: true,
+        startDate: true,
+        endDate: true,
         createdAt: true,
         updatedAt: true,
-        profile: {
-          select: {
-            phoneNo: true,
-            displayName: true,
-            bio: true,
-            avatarUrl: true,
-            locale: true,
-            preferences: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        trips: {
-          orderBy: { createdAt: "desc" },
-          take: 5, 
+        stops: {
           select: {
             id: true,
-            title: true,
-            slug: true,
-            description: true,
-            status: true,
-            startDate: true,
-            endDate: true,
-            privacy: true,
-            createdAt: true,
-            updatedAt: true,
-            stops: {
+            city: {
               select: {
-                id: true,
-                order: true,
-                arrival: true,
-                departure: true,
-                city: {
-                  select: {
-                    id: true,
-                    name: true,
-                    country: { select: { id: true, name: true, code: true } },
-                  },
-                },
-              },
-            },
-            activities: {
-              select: {
-                id: true,
-                title: true,
-                description: true,
-                startTime: true,
-                endTime: true,
-                booked: true,
-                attendees: true,
-                price: true,
-                currency: true,
-              },
-            },
-            expenses: {
-              select: {
-                id: true,
-                title: true,
-                category: true,
-                amount: true,
-                currency: true,
-                incurredAt: true,
-              },
-            },
-            favorites: {
-              select: { id: true, createdAt: true, userId: true },
-            },
-            comments: {
-              select: {
-                id: true,
-                content: true,
-                createdAt: true,
-                author: {
-                  select: { id: true, profile: { select: { displayName: true } } },
-                },
+                name: true,
+                country: { select: { name: true, code: true } },
               },
             },
           },
         },
-        favorites: {
-          orderBy: { createdAt: "desc" },
-          take: 5, // latest 5 favourites
-          select: {
-            id: true,
-            createdAt: true,
-            trip: {
-              select: { id: true, title: true, slug: true },
-            },
-          },
-        },
-        // comments: {
-        //   select: {
-        //     id: true,
-        //     content: true,
-        //     createdAt: true,
-        //     trip: { select: { id: true, title: true, slug: true } },
-        //   },
-        // },
-        // media: {
-        //   select: {
-        //     id: true,
-        //     url: true,
-        //     type: true,
-        //     createdAt: true,
-        //   },
-        // },
       },
     });
 
-    if (!userDashboard) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
+    const recentFavorites = await prisma.favorite.findMany({
+      where: { userId: id },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        createdAt: true,
+        trip: { select: { id: true, title: true, slug: true } },
+      },
+    });
 
-    return NextResponse.json(userDashboard, { status: 200 });
+    const preplannedTrips = await prisma.trip.findMany({
+      where: {
+        ownerId: id,
+        startDate: { gte: new Date() }, // upcoming
+        status: "PUBLISHED",
+      },
+      orderBy: { startDate: "asc" },
+      take: 5,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        startDate: true,
+        endDate: true,
+      },
+    });
+
+    const previousTrips = await prisma.trip.findMany({
+      where: {
+        ownerId: id,
+        endDate: { lt: new Date() },
+      },
+      orderBy: { endDate: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        startDate: true,
+        endDate: true,
+      },
+    });
+
+    // Response without profile
+    return NextResponse.json(
+      {
+        stats: {
+          totalTrips,
+          totalFavorites,
+          totalComments,
+          totalActivities,
+          totalExpenses,
+        },
+        recentTrips,
+        recentFavorites,
+        preplannedTrips,
+        previousTrips,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Failed to fetch dashboard data:", error);
     return NextResponse.json(
