@@ -2,7 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown, GraduationCap, Users } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  GraduationCap,
+  Users,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
@@ -42,7 +49,10 @@ const Navbar = () => {
     >
       <div className=" py-1">
         <div className="mx-auto px-3 lg:px-12 flex justify-between">
-          <div className="flex items-center py-3 md:py-4">Global Trotter</div>
+          <div className="flex items-center justify-center py-3 md:py-4 font-extrabold">
+            <Sparkles className="mr-2" />
+            GlobalTrotter
+          </div>
           {/* Desktop Navigation */}
           <div className="hidden lg:flex justify-center items-center">
             <div className="ml-10 flex justify-center items-center space-x-8">
