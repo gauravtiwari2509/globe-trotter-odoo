@@ -80,7 +80,7 @@ export default function SignUpPage() {
       <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 rounded-2xl border border-orange-100">
         <div className="text-center mb-6 sm:mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold font-michroma text-orange-600">
-            Create Your Account
+            Let's Get Started
           </h2>
           <p className="text-xs mt-2 sm:text-sm text-gray-600 font-tektur">
             Excited to have you join our family!

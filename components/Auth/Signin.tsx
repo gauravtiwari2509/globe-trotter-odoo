@@ -1,4 +1,5 @@
 "use client";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, SignInInput } from "@/zodSchemas/signInSchema";
@@ -46,7 +47,7 @@ export default function SignInPage() {
       if (!res?.ok) throw new Error(res?.error ?? "Invalid email or password");
 
       toast.success("Signed in successfully");
-      const session = await getSession();
+      const session: any = await getSession();
       const role = session?.user?.role || "intruder";
       router.push(roleRouteMap[role] || "/unauthorized");
     },
@@ -59,17 +60,19 @@ export default function SignInPage() {
   if (!isMounted) return null;
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-950 to-gray-900 text-white px-4 py-8">
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-orange-50 to-white text-gray-900 px-4 py-8">
       {isPending && <Loader />}
-      <div className="absolute top-1/5 left-1/3 w-72 h-72 bg-orange-600/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
 
-      <div className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-xl p-8 rounded-2xl shadow-2xl">
+      {/* Decorative blurred shapes */}
+      <div className="absolute top-1/5 left-1/3 w-72 h-72 bg-orange-200/40 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-orange-100/30 rounded-full blur-3xl"></div>
+
+      <div className="relative z-10 w-full max-w-lg bg-white border border-orange-100 shadow-2xl p-8 rounded-2xl">
         <div className="text-center mb-8">
           <h2 className="text-3xl max-sm:text-xl font-bold font-michroma text-orange-600">
-            Welcome Back
+            Good to See You Again!
           </h2>
-          <p className="text-sm text-white/80 font-tektur">
+          <p className="text-sm text-gray-600 font-tektur">
             Sign in to continue
           </p>
         </div>
@@ -82,23 +85,23 @@ export default function SignInPage() {
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-tektur mb-1">
-              email
+              Email
             </label>
             <input
               type="email"
               id="email"
               {...register("email")}
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60"
+              className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
               placeholder="you@nist.edu"
             />
             {errors.email && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1">
                 {errors.email.message}
               </p>
             )}
           </div>
 
-          {/* Password with show/hide toggle */}
+          {/* Password */}
           <div>
             <label
               htmlFor="password"
@@ -111,31 +114,32 @@ export default function SignInPage() {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 {...register("password")}
-                className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/60 pr-10"
+                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 pr-10 focus:ring-2 focus:ring-orange-400 focus:outline-none"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute inset-y-0 right-3 flex items-center text-white/70 hover:text-white focus:outline-none"
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
                 tabIndex={-1}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1">
                 {errors.password.message}
               </p>
             )}
           </div>
 
-          {formError && <p className="text-red-400 text-sm">{formError}</p>}
+          {formError && <p className="text-red-500 text-sm">{formError}</p>}
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isPending}
-            className="w-full py-3 cursor-pointer bg-white text-gray-900 font-bold rounded-full hover:bg-gray-200 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-michroma"
+            className="w-full py-3 cursor-pointer bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-michroma"
           >
             {isPending ? (
               "Signing In..."
@@ -147,7 +151,7 @@ export default function SignInPage() {
           </button>
         </form>
 
-        <p className="text-sm text-white/80 text-center mt-6 font-tektur">
+        <p className="text-sm text-gray-600 text-center mt-6 font-tektur">
           Don’t have an account?{" "}
           <Link href="/signup" className="text-orange-600 underline font-bold">
             Sign Up
@@ -157,7 +161,7 @@ export default function SignInPage() {
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-sm text-white/70 border-b-1 hover:text-white font-tektur"
+            className="text-sm text-gray-500 hover:text-gray-700 font-tektur"
           >
             ← Go back to home
           </Link>
