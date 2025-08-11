@@ -1,14 +1,14 @@
 import { ZodSchema } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 
-// REMEMBER:- ERROR ENCOUNTERED HERE WHEN DIRECTLY TRYING PASSING THE FORMDATA WITHOUT CONVERTING TO OBJECT
 function formDataToObject(formData: FormData) {
-  const obj: { [key: string]: any } = {};
+  const obj: Record<string, any> = {};
   formData.forEach((value, key) => {
     obj[key] = value;
   });
   return obj;
 }
+
 type HandlerContext = {
   params: any;
 };
@@ -23,7 +23,7 @@ export function withValidation<T>(
 ) {
   return async function (req: NextRequest, context: HandlerContext) {
     try {
-      let body;
+      let body: any;
 
       if (req.headers.get("Content-Type")?.includes("multipart/form-data")) {
         const formData = await req.formData();
@@ -35,7 +35,7 @@ export function withValidation<T>(
       const parsed = schema.safeParse(body);
 
       if (!parsed.success) {
-        return NextResponse.json( 
+        return NextResponse.json(
           { errors: parsed.error.errors },
           { status: 400 }
         );
