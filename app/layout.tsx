@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Playwrite_AU_QLD } from "next/font/google";
 import "./globals.css";
 import ClientSessionWrapper from "@/components/sessionProvider";
 import { TanstackProvider } from "@/components/tanstackProvider";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,21 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${playwrite.variable} antialiased`}
       >
         <ClientSessionWrapper>
-          <TanstackProvider>{children}</TanstackProvider>
+          <TanstackProvider>
+            {children}
+            <ToastContainer
+              position="bottom-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
+          </TanstackProvider>
         </ClientSessionWrapper>
       </body>
     </html>

@@ -13,10 +13,10 @@ export const signUpSchema = z
 
     email: z
       .string()
-      .email("Invalid email format")
+      .email("Please enter a valid email address.")
       .regex(
         /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-        "Must be a valid @gmail.com email"
+        "Email must be a valid @gmail.com address."
       ),
 
     password: z
@@ -31,7 +31,7 @@ export const signUpSchema = z
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Passwords do not match",
+    message: "Passwords do not match.",
   });
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
