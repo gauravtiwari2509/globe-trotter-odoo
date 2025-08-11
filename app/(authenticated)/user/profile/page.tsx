@@ -1,5 +1,5 @@
 const page = () => {
-  return <div>page</div>;
+  return <div>user profile page</div>;
 };
 
 export default page;
