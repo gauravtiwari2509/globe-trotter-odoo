@@ -1,7 +1,8 @@
+import { CreateTripForm } from "@/components/trip/CreateTrip";
 import React from "react";
 
 const page = () => {
-  return <div>create trip page</div>;
+  return <CreateTripForm />;
 };
 
 export default page;
