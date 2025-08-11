@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { otpSchema } from "@/zodSchemas/OtpSchema";
-import { OtpInput } from "@/zodSchemas/OtpSchema";
+import { OtpInput } from "@/zodSchemas/otpSchema";
 
 export const handleOTPVerification = async (
   req: NextRequest,
