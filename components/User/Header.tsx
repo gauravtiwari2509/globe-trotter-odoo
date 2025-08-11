@@ -12,8 +12,8 @@ const UserHeader: React.FC = () => {
   const pathname = usePathname();
 
   return (
-    <header className="bg-gray-primary/80 shadow-lg sticky top-0 z-50 backdrop-filter backdrop-blur-lg font-michroma ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <header className="bg-gray-primary/80 shadow-lg sticky top-0 z-50 backdrop-filter backdrop-blur-lg font-michroma">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
         <Link href={"/"} className="flex items-center  space-x-2">
           <div className="flex items-center justify-center py-3 md:py-4 font-extrabold text-xl">
             <Sparkles className="mr-2" />

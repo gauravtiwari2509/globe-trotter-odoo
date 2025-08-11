@@ -278,13 +278,13 @@ export default function Dashboard() {
         {/* Call to Action */}
         <div className="flex flex-wrap gap-4 justify-center">
           <Link
-            href="/trip/create"
+            href="/user/trips/create"
             className="px-6 py-3 bg-orange-600 text-white rounded-full font-michroma hover:bg-orange-700 transition"
           >
             Plan New Trip
           </Link>
           <Link
-            href="/trips"
+            href="/user/trips"
             className="px-6 py-3 border-2 border-gray-400 text-gray-700 rounded-full font-michroma hover:bg-gray-100 transition"
           >
             View All Trips
