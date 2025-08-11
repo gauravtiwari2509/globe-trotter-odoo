@@ -1,7 +1,8 @@
+import SignInPage from "@/components/Auth/Signin";
 import React from "react";
 
 const page = () => {
-  return <div>sign in page</div>;
+  return <SignInPage />;
 };
 
 export default page;
