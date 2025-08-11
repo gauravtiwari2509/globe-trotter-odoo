@@ -35,7 +35,7 @@ export function withValidation<T>(
       const parsed = schema.safeParse(body);
 
       if (!parsed.success) {
-        return NextResponse.json(
+        return NextResponse.json( 
           { errors: parsed.error.errors },
           { status: 400 }
         );

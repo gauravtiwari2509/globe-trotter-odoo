@@ -51,8 +51,8 @@ model User {
   updatedAt    DateTime @updatedAt
 
   verified     Boolean   @default(false)
-  otp          String? 
-  otpExpiresAt DateTime? 
+  otp          String?
+  otpExpiresAt DateTime?
 
   profile   Profile?
   trips     Trip[]     @relation("UserTrips")
@@ -65,6 +65,7 @@ model Profile {
   id          String   @id @default(uuid())
   user        User     @relation(fields: [userId], references: [id])
   userId      String   @unique
+  phoneNo     String?
   displayName String?
   bio         String?
   avatarUrl   String?
