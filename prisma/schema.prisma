@@ -1,0 +1,247 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum ActivityType {
+  SIGHTSEEING       
+  CULTURE           
+  ADVENTURE         
+  ENTERTAINMENT     
+  FOOD_AND_DRINK    
+  SHOPPING          
+  RELAXATION        
+  FESTIVAL          
+  OUTDOOR           
+  SPORTS            
+  OTHER             
+}
+
+enum TripStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  COMPLETED
+}
+
+enum ExpenseCategory {
+  TRANSPORT
+  ACCOMMODATION
+  ACTIVITY
+  MEAL
+  OTHER
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile   Profile?
+  trips     Trip[]     @relation("UserTrips")
+  favorites Favorite[]
+  comments  Comment[]
+  media     Media[]
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @unique
+  displayName String?
+  bio         String?
+  avatarUrl   String?
+  locale      String?
+  preferences Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Country {
+  id       String @id @default(uuid())
+  name     String
+  code     String @unique
+  currency String @default("USD")
+
+  cities City[]
+}
+
+model City {
+  id         String   @id @default(uuid())
+  name       String
+  slug       String   @unique
+  country    Country  @relation(fields: [countryId], references: [id])
+  countryId  String
+  lat        Float?
+  lng        Float?
+  costIndex  Float?
+  popularity Int?
+  meta       Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  stops      TripStop[]
+  activities ActivityTemplate[]
+}
+
+model ActivityTemplate {
+  id             String       @id @default(uuid())
+  title          String
+  description    String?
+  city           City?        @relation(fields: [cityId], references: [id])
+  cityId         String?
+  type           ActivityType @default(OTHER)
+  avgDurationMin Int?
+  price          Decimal?     @db.Decimal(10, 2)
+  images         Media[]
+  tags           String[]     @default([])
+  meta           Json?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  tripActivities TripActivity[]
+}
+
+model Media {
+  id                 String            @id @default(uuid())
+  url                String
+  type               String?
+  altText            String?
+  uploadedBy         User?             @relation(fields: [uploadedById], references: [id])
+  uploadedById       String?
+  createdAt          DateTime          @default(now())
+  activityTemplate   ActivityTemplate? @relation(fields: [activityTemplateId], references: [id])
+  activityTemplateId String?
+  trips              Trip[]
+}
+
+model Trip {
+  id           String     @id @default(uuid())
+  owner        User       @relation("UserTrips", fields: [ownerId], references: [id])
+  ownerId      String
+  title        String
+  slug         String     @unique
+  description  String?
+  coverMedia   Media?     @relation(fields: [coverMediaId], references: [id])
+  coverMediaId String?
+  status       TripStatus @default(DRAFT)
+  startDate    DateTime?
+  endDate      DateTime?
+  privacy      String     @default("private")
+
+  stops      TripStop[]
+  activities TripActivity[]
+  expenses   Expense[]
+  favorites  Favorite[]
+  publicView PublicItinerary?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comments  Comment[]
+}
+
+model TripStop {
+  id        String    @id @default(uuid())
+  trip      Trip      @relation(fields: [tripId], references: [id])
+  tripId    String
+  city      City      @relation(fields: [cityId], references: [id])
+  cityId    String
+  arrival   DateTime?
+  departure DateTime?
+  order     Int
+  notes     String?
+  meta      Json?
+
+  activities TripActivity[]
+  expenses   Expense[]
+
+  @@index([tripId, order])
+}
+
+model TripActivity {
+  id          String            @id @default(uuid())
+  trip        Trip              @relation(fields: [tripId], references: [id])
+  tripId      String
+  stop        TripStop?         @relation(fields: [stopId], references: [id])
+  stopId      String?
+  template    ActivityTemplate? @relation(fields: [templateId], references: [id])
+  templateId  String?
+  title       String
+  description String?
+  startTime   DateTime?
+  endTime     DateTime?
+  durationMin Int?
+  price       Decimal?          @db.Decimal(10, 2)
+  currency    String?           @default("USD")
+  booked      Boolean           @default(false)
+  attendees   Int?              @default(1)
+  meta        Json?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  comments    Comment[]
+}
+
+model Expense {
+  id         String          @id @default(uuid())
+  trip       Trip            @relation(fields: [tripId], references: [id])
+  tripId     String
+  stop       TripStop?       @relation(fields: [stopId], references: [id])
+  stopId     String?
+  title      String
+  category   ExpenseCategory
+  amount     Decimal         @db.Decimal(12, 2)
+  currency   String          @default("USD")
+  incurredAt DateTime?
+  vendor     String?
+  notes      String?
+  meta       Json?
+  createdAt  DateTime        @default(now())
+}
+
+model PublicItinerary {
+  id          String   @id @default(uuid())
+  trip        Trip     @relation(fields: [tripId], references: [id])
+  tripId      String   @unique
+  slug        String   @unique
+  publishedAt DateTime @default(now())
+  viewCount   Int      @default(0)
+  settings    Json?
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  trip      Trip     @relation(fields: [tripId], references: [id])
+  tripId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, tripId])
+}
+
+model Comment {
+  id         String        @id @default(uuid())
+  author     User          @relation(fields: [authorId], references: [id])
+  authorId   String
+  trip       Trip?         @relation(fields: [tripId], references: [id])
+  tripId     String?
+  activity   TripActivity? @relation(fields: [activityId], references: [id])
+  activityId String?
+  parentId   String?
+  content    String
+  createdAt  DateTime      @default(now())
+}
