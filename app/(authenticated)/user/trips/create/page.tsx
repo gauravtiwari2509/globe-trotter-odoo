@@ -1,4 +1,4 @@
-import { CreateTripForm } from "@/components/trip/CreateTrip";
+import { CreateTripForm } from "@/components/User/CreateTrip";
 import React from "react";
 
 const page = () => {
