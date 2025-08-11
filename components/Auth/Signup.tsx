@@ -30,14 +30,18 @@ export default function SignUpPage() {
     resolver: zodResolver(signUpSchema),
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async (data: SignUpInput) =>
       axios.post<SignupResponse>(API_ROUTES.AUTH.SIGNUP, {
         ...data,
-        role: "general_user",
+        role: "USER",
       }),
     onSuccess: (res) => {
       const { userId, message } = res.data;
+      console.log(res);
+      console.log(userId);
+      console.log(message);
+
       if (message.includes("created")) {
         toast.success("Account created. OTP sent to your email.");
       } else if (message.includes("OTP already sent")) {
@@ -50,8 +54,9 @@ export default function SignUpPage() {
       } else {
         toast.info(message);
       }
+
       if (userId) {
-        router.push("/verify-otp?userId=${userId}");
+        router.push(`/verify-otp?userId=${userId}`);
       }
     },
     onError: (err: any) => {
@@ -214,10 +219,10 @@ export default function SignUpPage() {
           <div className="col-span-1 md:col-span-2">
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isLoading}
               className="w-full py-3 cursor-pointer bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-michroma"
             >
-              {isPending ? (
+              {isLoading ? (
                 "Signing Up..."
               ) : (
                 <>
