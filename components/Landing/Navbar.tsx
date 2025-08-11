@@ -28,7 +28,6 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", href: "/" },
-    { name: "About Us", href: "/" },
     { name: "Get Inspired", href: "/" },
   ];
 
@@ -49,7 +48,7 @@ const Navbar = () => {
     >
       <div className=" py-1">
         <div className="mx-auto px-3 lg:px-12 flex justify-between">
-          <div className="flex items-center justify-center py-3 md:py-4 font-extrabold text-xl">
+          <div className="flex items-center justify-center py-3 md:py-4 font-extrabold text-xl font-arimo">
             <Sparkles className="mr-2" />
             GlobalTrotter
           </div>
@@ -124,7 +123,7 @@ const Navbar = () => {
                 Login
               </button>
             </Link>
-            <Link href="/">
+            <Link href="/signup">
               <button className="py-1 px-4 text-sm rounded-full transform hover:scale-95 transition-all duration-200 border cursor-pointer">
                 Get Started
               </button>

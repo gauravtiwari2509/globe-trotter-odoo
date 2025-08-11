@@ -37,6 +37,7 @@ const tripSchema = z
   .object({
     startDate: z.string().min(1, "Start date is required"),
     endDate: z.string().min(1, "End date is required"),
+    country: z.string().min(1, "Country is required"),
     description: z.string().min(1, "Description is required"),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
@@ -100,41 +101,62 @@ export function CreateTripForm() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Start Date */}
-          <div>
-            {/* Label color */}
-            <label htmlFor="startDate" className="block text-sm mb-1">
-              Start Date
-            </label>
-            <input
-              type="date"
-              id="startDate"
-              {...register("startDate")}
-              // Input field styling for light theme
-              className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400"
-            />
-            {errors.startDate && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.startDate.message}
-              </p>
-            )}
-          </div>
+          <div className="flex gap-10">
+            {/* Start Date */}
+            <div>
+              {/* Label color */}
+              <label htmlFor="startDate" className="block text-sm mb-1">
+                Start Date
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                {...register("startDate")}
+                // Input field styling for light theme
+                className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400"
+              />
+              {errors.startDate && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.startDate.message}
+                </p>
+              )}
+            </div>
 
-          {/* End Date */}
+            {/* End Date */}
+            <div>
+              <label htmlFor="endDate" className="block text-sm mb-1">
+                End Date
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                {...register("endDate")}
+                // Input field styling for light theme
+                className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400"
+              />
+              {errors.endDate && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.endDate.message}
+                </p>
+              )}
+            </div>
+          </div>
+          {/* Country */}
           <div>
-            <label htmlFor="endDate" className="block text-sm mb-1">
-              End Date
+            <label htmlFor="country" className="block text-sm mb-1">
+              Country
             </label>
             <input
-              type="date"
-              id="endDate"
-              {...register("endDate")}
+              type="text"
+              id="country"
+              {...register("country")}
               // Input field styling for light theme
               className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400"
+              placeholder="Enter your country"
             />
-            {errors.endDate && (
+            {errors.country && (
               <p className="text-red-600 text-sm mt-1">
-                {errors.endDate.message}
+                {errors.country.message}
               </p>
             )}
           </div>

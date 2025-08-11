@@ -9,5 +9,11 @@ export const API_ROUTES = {
   USER: {
     PROFILE: `${BASE_URL}/api/user/profile`,
     DASHBOARD: `${BASE_URL}/api/user/dashboard`,
+    TRIP: {
+      CREATE: `${BASE_URL}/api/user/trip/create`,
+      GET_ALL: (pageParam: number) =>
+        `${BASE_URL}/api/user/trip/get-all?page=${pageParam}&limit=10`,
+      GET_BY_ID: (id: string) => `${BASE_URL}/api/user/trip/${id}`,
+    },
   },
 } as const;
