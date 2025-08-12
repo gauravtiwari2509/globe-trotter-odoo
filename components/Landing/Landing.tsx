@@ -4,6 +4,7 @@ import HeroSection from "./HeroSection";
 import Services from "./Services";
 import Footer from "./Footer";
 import HowItWorks from "./Working";
+import FindBuddy from "./FindBuddy";
 
 const Landing = () => {
   return (
@@ -12,6 +13,7 @@ const Landing = () => {
       <HeroSection />
       <HowItWorks />
       <Services />
+      <FindBuddy />
       <Footer />
     </div>
   );
