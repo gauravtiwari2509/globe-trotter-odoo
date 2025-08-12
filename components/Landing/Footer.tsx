@@ -4,7 +4,7 @@ import React from "react";
 const Footer = () => {
   return (
     <>
-      <section className="relative min-h-[50vh] w-full my-16">
+      <section className="relative min-h-[50vh] w-full mb-16">
         <Image
           src="/photogallery/footer.jpg"
           alt="Footer Image"

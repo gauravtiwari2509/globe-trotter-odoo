@@ -154,7 +154,7 @@ const TripCard = ({ trip }: { trip: Trip }) => {
             </span>
           </div>
           <a
-            href={`/trips/${trip.slug}`} // Link to the detailed trip page
+            href={`/user/itinerary`}
             className="text-sm font-bold text-orange-500 hover:text-orange-600"
           >
             View Details →

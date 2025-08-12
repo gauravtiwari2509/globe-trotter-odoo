@@ -139,8 +139,8 @@ const Services = () => {
         </div>
       </section>
 
-      <section className="py-28 flex justify-center items-center flex-col">
-        <h1 className="text-5xl font-bold mb-20">
+      <section className="py-28 flex justify-center items-center flex-col px-7 md:px-0">
+        <h1 className="text-4xl md:text-5xl font-bold mb-20">
           Organize it all in one place.
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-7 w-full max-w-7xl">
