@@ -13,7 +13,7 @@ export async function POST(
 //   }
 
 //   const userId = session.user.id;
-    const userId = "6916f99e-4a7a-4a86-b7fa-05dec1f47e93"
+  const userId = "6916f99e-4a7a-4a86-b7fa-05dec1f47e93"
   const { tripId } = params; 
   try {
     if (!tripId) {
