@@ -1,227 +1,181 @@
+// /api/user/trip/create/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
-import { prisma } from "@/lib/db/prisma";
 import { createTripSchema } from "@/zodSchemas/tripCreation";
-import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db/prisma";
+import { places } from "@/constants/PlacesData";
+import { ActivityType } from "@prisma/client";
 
-function parseDateOrNull(val: any): Date | null {
-  if (!val) return null;
-  const d = new Date(val);
-  return isNaN(d.getTime()) ? null : d;
-}
-
-function slugify(str: string) {
-  return str
+// Helper function to generate trip slug (no changes)
+function generateTripSlug(title: string): string {
+  const baseSlug = title
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  // Using a shorter timestamp for cleaner slugs
+  const timestamp = Date.now().toString().slice(-6);
+  return `${baseSlug}-${timestamp}`;
 }
 
-async function ensureUniqueSlug(
-  base: string,
-  finder: (slug: string) => Promise<any>
-) {
-  let slug = base;
-  let counter = 0;
-  while (await finder(slug)) {
-    counter++;
-    slug = `${base}-${counter}`;
-  }
-  return slug;
-}
-
-const defaultPlace = {
-  name: "New Delhi",
-  slug: "new-delhi",
-  lat: 28.6139,
-  lng: 77.209,
-  costIndex: 60.5,
-  popularity: 95,
-  meta: {
-    theme: "Historical & Political Hub",
-    description:
-      "The capital of India, known for its rich history, iconic landmarks, and vibrant culture.",
-    best_time_to_visit: "October to March",
-  },
-  country: {
-    name: "India",
-    code: "IN",
-    currency: "INR",
-  },
-  activities: [
-    {
-      title: "Explore India Gate",
-      description: "A war memorial and an iconic symbol of New Delhi.",
-      durationMin: 60,
-      price: 0,
-      currency: "INR",
-      meta: {
-        traveler_tips:
-          "Visit during the evening when it is beautifully lit up.",
-      },
-    },
-  ],
-};
+// Pre-build lookup maps for efficiency (no changes)
+const cityDataMap = new Map(places.map((place) => [place.id, place]));
+const activityDataMap = new Map();
+places.forEach((place) => {
+  place.activities.forEach((activity) => {
+    activityDataMap.set(activity.id, activity);
+  });
+});
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const userId = session.user.id;
 
     const body = await request.json();
-    const validation = createTripSchema.safeParse(body);
-    if (!validation.success) {
+    const validationResult = createTripSchema.safeParse(body);
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: validation.error.errors.map(
-            (e) => `${e.path.join(".")}: ${e.message}`
-          ),
-        },
+        { error: "Validation failed", details: validationResult.error.errors },
         { status: 400 }
       );
     }
 
-    const payload = validation.data;
-    const { title, description, startDate, endDate, privacy, places } = payload;
+    const {
+      title,
+      description,
+      startDate,
+      endDate,
+      privacy,
+      places: tripPlaces,
+    } = validationResult.data;
 
-    const start = parseDateOrNull(startDate);
-    const end = parseDateOrNull(endDate);
+    // --- STEP 1: Seed reference data ---
+    for (const place of tripPlaces) {
+      const cityData = cityDataMap.get(place.cityId);
+      if (!cityData) throw new Error(`City with ID ${place.cityId} not found.`);
 
-    const defaultCountry = await prisma.country.upsert({
-      where: { code: "UNK" },
-      update: {},
-      create: { name: "Unknown Country", code: "UNK", currency: "USD" },
-    });
-
-    const createdTrip = await prisma.$transaction(async (tx) => {
-      const tripSlug = await ensureUniqueSlug(slugify(title), (slug) =>
-        tx.trip.findUnique({ where: { slug } })
-      );
-
-      const newTrip = await tx.trip.create({
-        data: {
-          ownerId: userId,
-          title,
-          slug: tripSlug,
-          description,
-          startDate: start,
-          endDate: end,
-          privacy: privacy ?? "private",
-          status: "DRAFT",
+      // FIX: Capture the result of the country upsert
+      const country = await prisma.country.upsert({
+        where: { code: cityData.country.code },
+        update: {},
+        create: {
+          id: cityData.country.id,
+          name: cityData.country.name,
+          code: cityData.country.code,
+          currency: cityData.country.currency,
         },
       });
 
+<<<<<<< HEAD
       for (const rawPlace of places) {
         const place = { ...defaultPlace, ...rawPlace };
+=======
+      // FIX: Use the ID from the captured country object
+      await prisma.city.upsert({
+        where: { id: cityData.id },
+        update: {},
+        create: {
+          id: cityData.id,
+          name: cityData.name,
+          slug: cityData.slug,
+          countryId: country.id, // <-- This is the fix!
+          lat: cityData.lat,
+          lng: cityData.lng,
+          costIndex: cityData.costIndex,
+          popularity: cityData.popularity,
+          meta: cityData.meta as any,
+        },
+      });
+>>>>>>> b2786d4c90cab93437b1a21e6a298eef7174fb7f
 
-        let country = await tx.country.findUnique({
-          where: { code: place.country?.code },
+      for (const activity of place.activities) {
+        const activityData = activityDataMap.get(activity.templateId);
+        if (!activityData)
+          throw new Error(`Activity with ID ${activity.templateId} not found.`);
+
+        await prisma.activityTemplate.upsert({
+          where: { id: activityData.id },
+          update: {},
+          create: {
+            id: activityData.id,
+            title: activityData.title,
+            description: activityData.description,
+            cityId: cityData.id,
+            type: activityData.type as ActivityType,
+            avgDurationMin: activityData.avgDurationMin,
+            price: activityData.price,
+            tags: activityData.tags,
+            meta: activityData.meta as any,
+          },
         });
-        if (!country) {
-          country = await tx.country.create({
-            data: {
-              name: place.country?.name ?? "Unknown",
-              code: place.country?.code ?? "UNK",
-              currency: place.country?.currency ?? "USD",
-            },
-          });
-        }
+      }
+    }
 
-        let city = await tx.city.findFirst({
-          where: { name: place.name, countryId: country.id },
-          select: { id: true },
-        });
+    // --- STEP 2: Create trip-specific records in a transaction ---
+    const newTrip = await prisma.$transaction(async (tx) => {
+      const trip = await tx.trip.create({
+        data: {
+          title,
+          slug: generateTripSlug(title),
+          description,
+          startDate: new Date(startDate),
+          endDate: new Date(endDate),
+          privacy,
+          status: "DRAFT",
+          ownerId: session.user.id,
+        },
+      });
 
-        if (!city) {
-          const uniqueCitySlug = await ensureUniqueSlug(
-            slugify(place.name),
-            (slug) => tx.city.findUnique({ where: { slug } })
-          );
-          const createdCity = await tx.city.create({
-            data: {
-              name: place.name,
-              slug: uniqueCitySlug,
-              country: { connect: { id: country.id } },
-              lat: place.lat,
-              lng: place.lng,
-              costIndex: place.costIndex,
-              popularity: place.popularity,
-              meta: place.meta ?? {},
-            },
-          });
-          city = { id: createdCity.id };
-        }
-
+      for (const place of tripPlaces) {
         const tripStop = await tx.tripStop.create({
           data: {
-            tripId: newTrip.id,
-            cityId: city.id,
-            order: typeof place.order === "number" ? place.order : 0,
-            arrival: parseDateOrNull(place.arrival) ?? start,
-            departure: parseDateOrNull(place.departure) ?? end,
-            notes: place.notes ?? null,
-            meta: place.meta ?? {},
+            tripId: trip.id,
+            cityId: place.cityId,
+            order: place.order,
+            notes: place.notes,
+            arrival: place.arrival ? new Date(place.arrival) : null,
+            departure: place.departure ? new Date(place.departure) : null,
           },
         });
 
-        if (Array.isArray(place.activities)) {
-          for (const rawActivity of place.activities) {
-            const activity = { ...defaultPlace.activities[0], ...rawActivity };
-            let templateId: string | null = null;
-
-            if (activity.templateId) {
-              const template = await tx.activityTemplate.findUnique({
-                where: { id: activity.templateId },
-                select: { id: true },
-              });
-              if (template) templateId = template.id;
-            }
-
-            await tx.tripActivity.create({
-              data: {
-                tripId: newTrip.id,
-                stopId: tripStop.id,
-                templateId,
-                title: activity.title,
-                description: activity.description ?? null,
-                durationMin: activity.durationMin ?? null,
-                price: activity.price ?? 0,
-                currency: activity.currency ?? country.currency,
-                startTime: parseDateOrNull(activity.startTime),
-                endTime: parseDateOrNull(activity.endTime),
-                booked: false,
-                meta: activity.meta ?? {},
-              },
-            });
-          }
+        for (const activity of place.activities) {
+          await tx.tripActivity.create({
+            data: {
+              tripId: trip.id,
+              stopId: tripStop.id,
+              templateId: activity.templateId,
+              title: activity.title,
+              description: activity.description,
+              durationMin: activity.durationMin,
+              price: activity.price,
+              currency: activity.currency,
+            },
+          });
         }
       }
-
-      return newTrip;
+      return trip;
     });
 
     return NextResponse.json({
       success: true,
       trip: {
-        id: createdTrip.id,
-        title: createdTrip.title,
-        slug: createdTrip.slug,
+        id: newTrip.id,
+        title: newTrip.title,
+        slug: newTrip.slug,
+        status: newTrip.status,
       },
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Trip creation error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred";
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Failed to create trip", details: errorMessage },
       { status: 500 }
     );
   }

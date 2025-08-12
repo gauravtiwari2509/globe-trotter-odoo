@@ -92,7 +92,7 @@ export default function SignInPage() {
               id="email"
               {...register("email")}
               className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
-              placeholder="you@nist.edu"
+              placeholder="you@gmail.com"
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">
