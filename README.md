@@ -371,34 +371,6 @@ The platform leverages Google's Gemini AI for:
 
 - *SQL Injection Protection*: Prisma ORM with parameterized queries
 
-- *File Upload Security*: S3 with proper access controls
-
-- *Rate Limiting*: API rate limiting for security
-
-
-
-## 🤝 Contributing
-
-
-
-1. Fork the repository
-
-2. Create a feature branch (git checkout -b feature/amazing-feature)
-
-3. Commit your changes (git commit -m 'Add some amazing feature')
-
-4. Push to the branch (git push origin feature/amazing-feature)
-
-5. Open a Pull Request
-
-
-
-## 📄 License
-
-
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 
 
 ## 👥 Team
@@ -424,9 +396,6 @@ For support and questions:
 - Contact the development team
 
 - Check the documentation for common issues
-
-
-
 
 
 ---
