@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
       });
 
       for (const rawPlace of places) {
-        const place = { ...defaultPlace, ...rawPlace }; // merge defaults
+        const place = { ...defaultPlace, ...rawPlace };
 
         let country = await tx.country.findUnique({
           where: { code: place.country?.code },
