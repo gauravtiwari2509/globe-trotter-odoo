@@ -284,7 +284,7 @@ export default function Dashboard() {
             Plan New Trip
           </Link>
           <Link
-            href="/user/trips"
+            href="/user/trips/all-trip"
             className="px-6 py-3 border-2 border-gray-400 text-gray-700 rounded-full font-michroma hover:bg-gray-100 transition"
           >
             View All Trips

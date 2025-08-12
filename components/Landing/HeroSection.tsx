@@ -17,10 +17,10 @@ const HeroSection = () => {
           className="absolute inset-0 -z-10 rounded-b-4xl"
         />
         <div className="absolute top-1/3 md:top-40 transform text-center text-black pl-8 md:pl-16 flex flex-col justify-center items-start">
-          <h1 className="text-7xl md:text-9xl font-extrabold mb-4 text-left tracking-tight">
+          <h1 className="text-7xl md:text-9xl font-extrabold mb-4 text-left tracking-tight font-arimo">
             Endless <br /> horizons
           </h1>
-          <p className="text-lg mb-6">
+          <p className="text-lg mb-6 font-playwrite">
             Curated luxury experiences that transform ordinary moments into
             lifelong memories.
           </p>

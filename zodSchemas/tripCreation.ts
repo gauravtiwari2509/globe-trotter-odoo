@@ -1,4 +1,3 @@
-// lib/validations/trip.ts
 import { z } from "zod";
 
 // Base trip data schema
